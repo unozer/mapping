@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.corso.tracciatore_spese.models.Category;
 import it.corso.tracciatore_spese.models.Expense;
-import it.corso.tracciatore_spese.models.ExpenseDTO;
 import it.corso.tracciatore_spese.services.ExpenseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,12 +66,24 @@ public class ExpenseController {
     @PutMapping("/{id}")
     @Operation(summary = "Modifica una spesa tramite id")
     @ApiResponse(responseCode = "200", description = "Spesa modificata con successo")
-    public Expense updateExpense(@PathVariable Long id,
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long id,
                                  @RequestParam String movement,
                                  @RequestParam float cash,
-                                 @RequestParam Category category) {
-        Expense updatedExpense = expenseService.updateExpense(id, movement, cash, category);
-        return updatedExpense;
+                                 @RequestParam Long category_id) {
+
+        Expense updatedExpense = new Expense();
+        updatedExpense.setId(id);
+        updatedExpense.setMovement(movement);
+        updatedExpense.setCash(cash);
+        Category cat = expenseService.getCategoryById(category_id);
+        if (cat != null) {
+            updatedExpense.setCategory(cat);
+            expenseService.updateExpense(updatedExpense);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedExpense);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -43,6 +43,10 @@ public class ExpenseService {
         return expenseRepository.save(updatedExpense);
     }
 
+    public Expense updateExpense(Expense updatedExpense) {
+        return expenseRepository.save(updatedExpense);
+    }
+
     public boolean deleteExpense(Long id) {
         Expense expense = expenseRepository.findById(id).orElse(null);
         if (expense != null) {
