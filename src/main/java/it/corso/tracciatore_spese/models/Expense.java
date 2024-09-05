@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Table(name = "expenses")
@@ -19,6 +20,7 @@ public class Expense implements Serializable {
     private Long id;
     private String movement;
     private float cash;
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

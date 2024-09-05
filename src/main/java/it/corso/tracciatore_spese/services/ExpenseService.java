@@ -7,6 +7,7 @@ import it.corso.tracciatore_spese.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -29,8 +30,8 @@ public class ExpenseService {
         return expenseRepository.findById(id).orElse(null);
     }
 
-    public Expense createNewExpense(String movement, float cash, Category category) {
-        Expense newExpense = new Expense(null, movement, cash, category);
+    public Expense createNewExpense(String movement, float cash, Date date, Category category) {
+        Expense newExpense = new Expense(null, movement, cash, date, category);
         return expenseRepository.save(newExpense);
     }
 
@@ -38,8 +39,8 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
-    public Expense updateExpense(Long id, String movement, float cash, Category category) {
-        Expense updatedExpense = new Expense(id, movement, cash, category);
+    public Expense updateExpense(Long id, String movement, float cash, Date date, Category category) {
+        Expense updatedExpense = new Expense(id, movement, cash, date, category);
         return expenseRepository.save(updatedExpense);
     }
 

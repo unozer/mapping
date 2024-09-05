@@ -14,9 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/expenses")
 @Tag(name = "Gestione spese", description = "API di gestione movimenti spese")
 public class ExpenseController {
@@ -48,17 +50,18 @@ public class ExpenseController {
     @ApiResponse(responseCode = "200", description = "Spesa aggiunta con successo")
     public ResponseEntity<Expense> createNewExpense(@RequestParam String movement,
                                                     @RequestParam float cash,
+                                                    @RequestParam Date date,
                                                     @RequestParam Long category_id) {
         Expense newExpense = new Expense();
         newExpense.setMovement(movement);
         newExpense.setCash(cash);
+        newExpense.setDate(date);
         Category cat = expenseService.getCategoryById(category_id);
         if (cat != null) {
             newExpense.setCategory(cat);
             expenseService.createNewExpense(newExpense);
             return ResponseEntity.status(HttpStatus.CREATED).body(newExpense);
-        }
-        else {
+        } else {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
     }
@@ -67,21 +70,22 @@ public class ExpenseController {
     @Operation(summary = "Modifica una spesa tramite id")
     @ApiResponse(responseCode = "200", description = "Spesa modificata con successo")
     public ResponseEntity<Expense> updateExpense(@PathVariable Long id,
-                                 @RequestParam String movement,
-                                 @RequestParam float cash,
-                                 @RequestParam Long category_id) {
+                                                 @RequestParam String movement,
+                                                 @RequestParam float cash,
+                                                 @RequestParam Date date,
+                                                 @RequestParam Long category_id) {
 
         Expense updatedExpense = new Expense();
         updatedExpense.setId(id);
         updatedExpense.setMovement(movement);
         updatedExpense.setCash(cash);
+        updatedExpense.setDate(date);
         Category cat = expenseService.getCategoryById(category_id);
         if (cat != null) {
             updatedExpense.setCategory(cat);
             expenseService.updateExpense(updatedExpense);
             return ResponseEntity.status(HttpStatus.OK).body(updatedExpense);
-        }
-        else {
+        } else {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
         }
     }
