@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.corso.tracciatore_spese.models.Category;
 import it.corso.tracciatore_spese.models.Expense;
+import it.corso.tracciatore_spese.models.ExpenseDTO;
 import it.corso.tracciatore_spese.services.ExpenseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,15 +49,12 @@ public class ExpenseController {
     @PostMapping
     @Operation(summary = "Aggiunge una spesa al database")
     @ApiResponse(responseCode = "200", description = "Spesa aggiunta con successo")
-    public ResponseEntity<Expense> createNewExpense(@RequestParam String movement,
-                                                    @RequestParam float cash,
-                                                    @RequestParam Date date,
-                                                    @RequestParam Long category_id) {
+    public ResponseEntity<Expense> createNewExpense(@RequestBody ExpenseDTO expenseDTO) {
         Expense newExpense = new Expense();
-        newExpense.setMovement(movement);
-        newExpense.setCash(cash);
-        newExpense.setDate(date);
-        Category cat = expenseService.getCategoryById(category_id);
+        newExpense.setMovement(expenseDTO.getMovement());
+        newExpense.setCash(expenseDTO.getCash());
+        newExpense.setDate(expenseDTO.getDate());
+        Category cat = expenseService.getCategoryById(expenseDTO.getCategory_id());
         if (cat != null) {
             newExpense.setCategory(cat);
             expenseService.createNewExpense(newExpense);
