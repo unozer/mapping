@@ -68,24 +68,20 @@ public class ExpenseController {
     @Operation(summary = "Modifica una spesa tramite id")
     @ApiResponse(responseCode = "200", description = "Spesa modificata con successo")
     public ResponseEntity<Expense> updateExpense(@PathVariable Long id,
-                                                 @RequestParam String movement,
-                                                 @RequestParam float cash,
-                                                 @RequestParam Date date,
-                                                 @RequestParam Long category_id) {
-
-        Expense updatedExpense = new Expense();
-        updatedExpense.setId(id);
-        updatedExpense.setMovement(movement);
-        updatedExpense.setCash(cash);
-        updatedExpense.setDate(date);
-        Category cat = expenseService.getCategoryById(category_id);
-        if (cat != null) {
-            updatedExpense.setCategory(cat);
-            expenseService.updateExpense(updatedExpense);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedExpense);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+                                                 @RequestBody ExpenseDTO expenseDTO) {
+        Expense updatedExpense = expenseService.getExpenseById(id);
+        if (updatedExpense != null) {
+            Category cat = expenseService.getCategoryById(expenseDTO.getCategory_id());
+            if (cat != null) {
+                updatedExpense.setMovement(expenseDTO.getMovement());
+                updatedExpense.setCash(expenseDTO.getCash());
+                updatedExpense.setDate(expenseDTO.getDate());
+                updatedExpense.setCategory(cat);
+                expenseService.updateExpense(updatedExpense);
+                return ResponseEntity.status(HttpStatus.OK).body(updatedExpense);
+            }
         }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @DeleteMapping("/{id}")

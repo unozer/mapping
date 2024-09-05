@@ -29,7 +29,7 @@ public class CategoryService {
         return categoryRepository.save(newCategory);
     }
 
-    public Category updateCategory(Long id, String categoryType, List<Expense> expense) {
+    public Category updateCategory(Long id, String categoryType) {
         Category updatedCategory = new Category(id, categoryType);
         return categoryRepository.save(updatedCategory);
     }

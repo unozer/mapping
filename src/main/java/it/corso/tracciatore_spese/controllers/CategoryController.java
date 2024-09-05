@@ -57,9 +57,8 @@ public class CategoryController {
     @Operation(summary = "Modifica una categoria tramite id")
     @ApiResponse(responseCode = "200", description = "Categoria modificata con successo")
     public Category updateCategory(@PathVariable Long id,
-                                 @RequestParam String categoryType,
-                                 @RequestParam List<Expense> expenses) {
-        Category updatedCategory = categoryService.updateCategory(id, categoryType, expenses);
+                                 @RequestParam String categoryType) {
+        Category updatedCategory = categoryService.updateCategory(id, categoryType);
         return updatedCategory;
     }
 
