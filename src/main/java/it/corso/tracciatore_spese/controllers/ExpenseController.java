@@ -94,4 +94,11 @@ public class ExpenseController {
     public void deleteExpense(@PathVariable Long id) {
         expenseService.deleteExpense(id);
     }
+
+    @DeleteMapping("/all")
+    @Operation(summary = "Elimina tutte le spese dal database")
+    public void deleteAllExpenses() {
+        expenseService.deleteAllExpenses();
+    }
 }
+

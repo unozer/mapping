@@ -56,4 +56,8 @@ public class ExpenseService {
         }
         return false;
     }
+
+    public void deleteAllExpenses() {
+        expenseRepository.deleteAll();
+    }
 }
