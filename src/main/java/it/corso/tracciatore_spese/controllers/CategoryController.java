@@ -47,8 +47,7 @@ public class CategoryController {
     @PostMapping
     @Operation(summary = "Aggiunge una categoria al database")
     @ApiResponse(responseCode = "200", description = "Categoria aggiunta con successo")
-    public ResponseEntity<Category> createNewCategory(@RequestParam String categoryType,
-                                                    @RequestParam List<Expense> expenses) {
+    public ResponseEntity<Category> createNewCategory(@RequestBody String categoryType) {
         Category newCategory = categoryService.createNewCategory(categoryType);
         return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
     }
@@ -57,7 +56,7 @@ public class CategoryController {
     @Operation(summary = "Modifica una categoria tramite id")
     @ApiResponse(responseCode = "200", description = "Categoria modificata con successo")
     public Category updateCategory(@PathVariable Long id,
-                                 @RequestParam String categoryType) {
+                                   @RequestBody String categoryType) {
         Category updatedCategory = categoryService.updateCategory(id, categoryType);
         return updatedCategory;
     }
