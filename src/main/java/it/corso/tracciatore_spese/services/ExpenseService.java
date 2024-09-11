@@ -1,12 +1,15 @@
 package it.corso.tracciatore_spese.services;
 
+import it.corso.tracciatore_spese.mappers.ExpenseMapper;
 import it.corso.tracciatore_spese.models.Category;
 import it.corso.tracciatore_spese.models.Expense;
+import it.corso.tracciatore_spese.models.ExpenseDTO;
 import it.corso.tracciatore_spese.repositories.CategoryRepository;
 import it.corso.tracciatore_spese.repositories.ExpenseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 
@@ -17,6 +20,8 @@ public class ExpenseService {
     private ExpenseRepository expenseRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+
+    private final ExpenseMapper expenseMapper = ExpenseMapper.INSTANCE;
 
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id).orElse(null);
@@ -30,21 +35,20 @@ public class ExpenseService {
         return expenseRepository.findById(id).orElse(null);
     }
 
-    public Expense createNewExpense(String movement, float cash, Date date, Category category) {
-        Expense newExpense = new Expense(null, movement, cash, date, category);
-        return expenseRepository.save(newExpense);
+    public Expense createNewExpense(ExpenseDTO expenseDTO) {
+
+        categoryRepository.findById(expenseDTO.getCategory_id()).orElseThrow(() -> new RuntimeException("Categoria non trovata"));
+
+        Expense expense = expenseMapper.dtoToEntity(expenseDTO);
+        expense = expenseRepository.save(expense);
+
+        return expense;
     }
 
-    public Expense createNewExpense(Expense expense) {
-        return expenseRepository.save(expense);
-    }
-
-    public Expense updateExpense(Long id, String movement, float cash, Date date, Category category) {
-        Expense updatedExpense = new Expense(id, movement, cash, date, category);
-        return expenseRepository.save(updatedExpense);
-    }
-
-    public Expense updateExpense(Expense updatedExpense) {
+    public Expense updateExpense(Long id, ExpenseDTO expenseDTO) {
+        expenseRepository.findById(id).orElseThrow(() -> new RuntimeException("Spesa non trovata"));
+        Expense updatedExpense = expenseMapper.dtoToEntity(expenseDTO);
+        updatedExpense.setId(id);
         return expenseRepository.save(updatedExpense);
     }
 

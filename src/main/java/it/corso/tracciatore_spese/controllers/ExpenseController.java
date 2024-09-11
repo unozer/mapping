@@ -50,18 +50,22 @@ public class ExpenseController {
     @Operation(summary = "Aggiunge una spesa al database")
     @ApiResponse(responseCode = "200", description = "Spesa aggiunta con successo")
     public ResponseEntity<Expense> createNewExpense(@RequestBody ExpenseDTO expenseDTO) {
-        Expense newExpense = new Expense();
-        newExpense.setMovement(expenseDTO.getMovement());
-        newExpense.setCash(expenseDTO.getCash());
-        newExpense.setDate(expenseDTO.getDate());
-        Category cat = expenseService.getCategoryById(expenseDTO.getCategory_id());
-        if (cat != null) {
-            newExpense.setCategory(cat);
-            expenseService.createNewExpense(newExpense);
-            return ResponseEntity.status(HttpStatus.CREATED).body(newExpense);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-        }
+
+        Expense newExpense = expenseService.createNewExpense(expenseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newExpense);
+
+//        Expense newExpense = new Expense();
+//        newExpense.setMovement(expenseDTO.getMovement());
+//        newExpense.setCash(expenseDTO.getCash());
+//        newExpense.setDate(expenseDTO.getDate());
+//        Category cat = expenseService.getCategoryById(expenseDTO.getCategory_id());
+//        if (cat != null) {
+//            newExpense.setCategory(cat);
+//            expenseService.createNewExpense(expenseDTO);
+//            return ResponseEntity.status(HttpStatus.CREATED).body(newExpense);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+//        }
     }
 
     @PutMapping("/{id}")
@@ -69,19 +73,10 @@ public class ExpenseController {
     @ApiResponse(responseCode = "200", description = "Spesa modificata con successo")
     public ResponseEntity<Expense> updateExpense(@PathVariable Long id,
                                                  @RequestBody ExpenseDTO expenseDTO) {
-        Expense updatedExpense = expenseService.getExpenseById(id);
-        if (updatedExpense != null) {
-            Category cat = expenseService.getCategoryById(expenseDTO.getCategory_id());
-            if (cat != null) {
-                updatedExpense.setMovement(expenseDTO.getMovement());
-                updatedExpense.setCash(expenseDTO.getCash());
-                updatedExpense.setDate(expenseDTO.getDate());
-                updatedExpense.setCategory(cat);
-                expenseService.updateExpense(updatedExpense);
-                return ResponseEntity.status(HttpStatus.OK).body(updatedExpense);
-            }
-        }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        Expense updatedExpense = expenseService.updateExpense(id, expenseDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedExpense);
+
     }
 
     @DeleteMapping("/{id}")
